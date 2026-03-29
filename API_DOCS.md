@@ -1,18 +1,16 @@
 Base URL: http://127.0.0.1:8000
 
-Overview
+OVERVIEW:
 
 This API powers an AI-driven shopping assistant that supports conversational interaction, product retrieval, and image-based product search. It is built using FastAPI and follows RESTful design principles.
 
 The API allows clients to:
 
-Retrieve product data
-Perform text-based product search
-Upload and analyze images using AI
+i)Retrieve product data
+ii)Perform text-based product search
+iii)Upload and analyze images using AI
 
-Endpoints
-
-Health Check
+ENDPOINTS:
 
 GET /
 Checks if the API is running.
@@ -132,7 +130,7 @@ Response
   ]
 }
 
-mage-Based Search
+Image-Based Search
 
 After uploading an image, pass the filename:
 
@@ -156,14 +154,15 @@ Response
   ]
 }
 
-Error Handling
+ERROR HANDLING:
 
 Status Code	Description
 200	Request successful
 422	Invalid input
 500	Server error
 
-Notes
+NOTES:
+
 Image analysis is performed using Google Gemini Vision API.
 Image-based search currently maps detected categories to products in the catalog.
 The API is designed to be lightweight and can be extended with advanced features such as vector-based similarity search or database integration.
