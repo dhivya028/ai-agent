@@ -10,7 +10,7 @@ import json
 import os
 import io
 
-# Load API keys from .env file
+# Loading API keys from .env file
 load_dotenv(override=True)
 
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
@@ -18,7 +18,7 @@ genai.configure(api_key=GOOGLE_API_KEY)
 
 app = FastAPI()
 
-# Serve product images as static files
+# Serving product images as static files
 app.mount("/images", StaticFiles(directory="frontend/images"), name="images")
 
 app.add_middleware(
@@ -29,25 +29,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Load product catalog
+# Loading product catalog
 with open("backend/products.json", "r") as file:
     PRODUCTS = json.load(file)
 
-# In-memory cache: stores Vision analysis per uploaded filename
 image_analysis_cache = {}
-
-
-# ─────────────────────────────────────────────
-# REQUEST MODEL — must be defined before routes
-# ─────────────────────────────────────────────
 class ChatRequest(BaseModel):
     message: str
     image_filename: Optional[str] = None
 
-
-# ─────────────────────────────────────────────
-# GEMINI VISION — analyze image
-# ─────────────────────────────────────────────
+# analyze image
 def analyze_image_with_gemini(image_bytes: bytes):
     """Try Gemini Vision first, fall back to smart filename detection."""
     try:
@@ -99,17 +90,11 @@ def detect_from_filename(filename: str):
     return {"category": "unknown", "subcategory": "unknown",
             "description": "Please rename image (e.g. headphones.jpg, dress.jpg)"}
 
-
-# ─────────────────────────────────────────────
 # HELPERS
-# ─────────────────────────────────────────────
 def get_products_by_category(category: str):
     return [p for p in PRODUCTS if p["category"] == category]
 
-
-# ─────────────────────────────────────────────
 # UPLOAD IMAGE — powered by Google Vision
-# ─────────────────────────────────────────────
 @app.post("/upload-image")
 async def upload_image(file: UploadFile = File(...)):
     content = await file.read()
@@ -129,22 +114,19 @@ async def upload_image(file: UploadFile = File(...)):
         "ai_analysis": analysis
     }
 
-
-# ─────────────────────────────────────────────
 # CHAT — text + image search
-# ─────────────────────────────────────────────
 @app.post("/chat")
 def chat(request: ChatRequest):
     user_message = request.message.lower().strip()
     products = PRODUCTS
 
-    # ── IMAGE SEARCH ──────────────────────────
+    #IMAGE SEARCH 
     if request.image_filename:
         analysis = image_analysis_cache.get(request.image_filename)
 
         if not analysis:
             return {
-                "reply": "⚠️ Please upload the image first, then click Send.",
+                "reply": " Please upload the image first, then click Send.",
                 "products": []
             }
 
@@ -154,27 +136,27 @@ def chat(request: ChatRequest):
 
         if detected_category == "dress":
             filtered = get_products_by_category("dress")
-            reply = f"I detected: {description} 👗. Here are similar dresses!"
+            reply = f"I detected: {description} . Here are similar dresses!"
 
         elif detected_category == "gadget":
             filtered = get_products_by_category("gadget")
             if detected_sub == "headphones":
                 filtered = [p for p in filtered if "headphone" in p["name"].lower()]
-                reply = f"I detected: {description} 🎧. Here are similar headphones!"
+                reply = f"I detected: {description} . Here are similar headphones!"
             elif detected_sub == "earbuds":
                 filtered = [p for p in filtered if "earbud" in p["name"].lower()]
-                reply = f"I detected: {description} 🎧. Here are similar earbuds!"
+                reply = f"I detected: {description} . Here are similar earbuds!"
             elif detected_sub == "speaker":
                 filtered = [p for p in filtered if "speaker" in p["name"].lower()]
-                reply = f"I detected: {description} 🔊. Here are similar speakers!"
+                reply = f"I detected: {description} . Here are similar speakers!"
             elif detected_sub == "smartwatch":
                 filtered = [p for p in filtered if "smart" in p["name"].lower()]
-                reply = f"I detected: {description} ⌚. Here are similar smartwatches!"
+                reply = f"I detected: {description} . Here are similar smartwatches!"
             elif detected_sub == "charger":
                 filtered = [p for p in filtered if "charger" in p["name"].lower()]
-                reply = f"I detected: {description} 🔋. Here are similar chargers!"
+                reply = f"I detected: {description} . Here are similar chargers!"
             else:
-                reply = f"I detected: {description} 📱. Here are similar gadgets!"
+                reply = f"I detected: {description} . Here are similar gadgets!"
             if not filtered:
                 filtered = get_products_by_category("gadget")
 
@@ -182,21 +164,21 @@ def chat(request: ChatRequest):
             filtered = get_products_by_category("accessory")
             if detected_sub == "watch":
                 filtered = [p for p in filtered if "watch" in p["name"].lower()]
-                reply = f"I detected: {description} ⌚. Here are similar watches!"
+                reply = f"I detected: {description} . Here are similar watches!"
             elif detected_sub == "bag":
                 filtered = [p for p in filtered if "bag" in p["name"].lower()]
-                reply = f"I detected: {description} 👜. Here are similar bags!"
+                reply = f"I detected: {description} . Here are similar bags!"
             elif detected_sub == "backpack":
                 filtered = [p for p in filtered if "backpack" in p["name"].lower()]
-                reply = f"I detected: {description} 🎒. Here are similar backpacks!"
+                reply = f"I detected: {description} . Here are similar backpacks!"
             elif detected_sub == "sunglasses":
                 filtered = [p for p in filtered if "sunglass" in p["name"].lower()]
-                reply = f"I detected: {description} 🕶️. Here are similar sunglasses!"
+                reply = f"I detected: {description} . Here are similar sunglasses!"
             elif detected_sub == "necklace":
                 filtered = [p for p in filtered if "necklace" in p["name"].lower()]
-                reply = f"I detected: {description} 📿. Here are similar necklaces!"
+                reply = f"I detected: {description} . Here are similar necklaces!"
             else:
-                reply = f"I detected: {description} 👜. Here are similar accessories!"
+                reply = f"I detected: {description} . Here are similar accessories!"
             if not filtered:
                 filtered = get_products_by_category("accessory")
 
@@ -211,14 +193,14 @@ def chat(request: ChatRequest):
 
         return {"reply": reply, "products": filtered}
 
-    # ── TEXT SEARCH ───────────────────────────
+    #TEXT SEARCH
     if "name" in user_message:
-        return {"reply": "I am your AI Shopping Assistant 🤖"}
+        return {"reply": "I am your AI Shopping Assistant "}
 
     elif "what can you do" in user_message:
         return {
             "reply": (
-                "I can help you find products by text or image! 🛍️\n"
+                "I can help you find products by text or image! \n"
                 "• Type what you're looking for (e.g. 'black dress', 'cheap earbuds')\n"
                 "• Upload ANY photo of a product and I'll find similar items!"
             )
@@ -235,13 +217,13 @@ def chat(request: ChatRequest):
         if "cheap" in user_message or "budget" in user_message or "under 50" in user_message:
             filtered = [p for p in filtered if p["price"] < 50]
         if not filtered:
-            return {"reply": "Sorry, I couldn't find matching dresses 😔", "products": []}
+            return {"reply": "Sorry, I couldn't find matching dresses ", "products": []}
         reply = "Here are some dresses"
         if "black" in user_message: reply += " in black"
         if "blue"  in user_message: reply += " in blue"
         if "red"   in user_message: reply += " in red"
         if "cheap" in user_message or "budget" in user_message: reply += " under budget"
-        reply += " 👗"
+        reply += " "
         return {"reply": reply, "products": filtered}
 
     elif any(w in user_message for w in ["accessory", "bag", "handbag", "watch", "watches", "sunglasses", "necklace", "backpack"]):
@@ -254,8 +236,8 @@ def chat(request: ChatRequest):
         if "black" in user_message: filtered = [p for p in filtered if p["color"] == "black"]
         if "gold"  in user_message: filtered = [p for p in filtered if p["color"] == "gold"]
         if not filtered:
-            return {"reply": "Sorry, I couldn't find matching accessories 😔", "products": []}
-        reply = "Here are some accessories 👜"
+            return {"reply": "Sorry, I couldn't find matching accessories ", "products": []}
+        reply = "Here are some accessories "
         return {"reply": reply, "products": filtered}
 
     elif any(w in user_message for w in ["gadget", "earbud", "earbuds", "speaker", "smartwatch", "smart watch", "headphone", "headphones", "charger", "power bank"]):
@@ -270,12 +252,12 @@ def chat(request: ChatRequest):
         if "white" in user_message: filtered = [p for p in filtered if p["color"] == "white"]
         if "cheap" in user_message or "budget" in user_message: filtered = [p for p in filtered if p["price"] < 80]
         if not filtered:
-            return {"reply": "Sorry, I couldn't find matching gadgets 😔", "products": []}
-        reply = "Here are some gadgets 📱"
+            return {"reply": "Sorry, I couldn't find matching gadgets ", "products": []}
+        reply = "Here are some gadgets "
         return {"reply": reply, "products": filtered}
 
     else:
-        return {"reply": "I didn't understand that. Try: 'black dress', 'earbuds', or upload a product photo 📸"}
+        return {"reply": "I didn't understand that. Try: 'black dress', 'earbuds', or upload a product photo "}
 
 
 @app.get("/")
@@ -287,8 +269,8 @@ def home():
 def check_key():
     key = os.getenv("GOOGLE_API_KEY")
     if not key:
-        return {"status": "❌ GOOGLE_API_KEY is NOT set"}
-    return {"status": f"✅ Google Gemini Key found: {key[:10]}..."}
+        return {"status": "GOOGLE_API_KEY is NOT set"}
+    return {"status": f" Google Gemini Key found: {key[:10]}"}
 
 
 @app.get("/products")
