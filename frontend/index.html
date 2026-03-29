@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Shopping Assistant</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: #f3f3f3;
+            color: #111;
+        }
+
+        .navbar {
+            background: #131921;
+            color: white;
+            padding: 16px 24px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .container {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .chat-section {
+            width: 30%;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            height: fit-content;
+        }
+
+        .product-section {
+            width: 70%;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        h2,
+        h3 {
+            margin-top: 0;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        .button-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        button {
+            padding: 10px 16px;
+            border: none;
+            background: #febd69;
+            color: #111;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #f3a847;
+        }
+
+        #response {
+            background: #f8f8f8;
+            padding: 12px;
+            border-radius: 8px;
+            min-height: 50px;
+            margin-top: 10px;
+            font-size: 15px;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .product-card {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            padding: 14px;
+            text-align: center;
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.06);
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .product-name {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        .product-price {
+            color: #b12704;
+            font-size: 15px;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        .product-category {
+            color: #555;
+            font-size: 14px;
+        }
+
+        .upload-status {
+            margin-top: 10px;
+            font-size: 14px;
+            color: green;
+        }
+
+        .image-preview {
+            width: 100%;
+            max-width: 250px;
+            border-radius: 10px;
+            margin-top: 10px;
+            display: none;
+            border: 1px solid #ddd;
+        }
+
+        @media (max-width: 900px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .chat-section,
+            .product-section {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="navbar">AI Shopping Assistant 🤖</div>
+
+    <div class="container">
+        <div class="chat-section">
+            <h2>Ask the Assistant</h2>
+            <input id="message" type="text" placeholder="Try: black dress, cheap gadget..." />
+
+            <div class="button-row">
+                <button onclick="sendMessage()">Send</button>
+            </div>
+
+            <input type="file" id="imageInput" />
+            <div class="button-row">
+                <button onclick="uploadImage()">Upload Image</button>
+            </div>
+
+            <div class="upload-status" id="uploadStatus"></div>
+
+            <h3>Uploaded Image</h3>
+            <img id="imagePreview" class="image-preview" alt="Uploaded Preview" />
+
+            <h3>Assistant Response</h3>
+            <div id="response">Your response will appear here.</div>
+        </div>
+
+        <div class="product-section">
+            <h2>Recommended Products</h2>
+            <div id="products" class="products-grid"></div>
+        </div>
+    </div>
+
+    <script>
+        let uploadedImage = null;
+
+        async function sendMessage() {
+            const message = document.getElementById("message").value;
+
+            const res = await fetch("http://127.0.0.1:8000/chat", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    message: message,
+                    image_filename: uploadedImage
+                })
+            });
+
+            const data = await res.json();
+
+            document.getElementById("response").innerText = data.reply;
+
+            const productsDiv = document.getElementById("products");
+            productsDiv.innerHTML = "";
+
+            if (data.products) {
+                data.products.forEach(p => {
+                    productsDiv.innerHTML += `
+                        <div class="product-card">
+                          <img src="${p.image_url}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/220x180?text=Product+Image';" />
+                          <div class="product-name">${p.name}</div>
+                          <div class="product-price">$${p.price}</div>
+                          <div class="product-category">${p.category}</div>
+                        </div>
+                    `;
+                });
+            }
+        }
+
+        async function uploadImage() {
+            const fileInput = document.getElementById("imageInput");
+
+            if (!fileInput.files.length) {
+                document.getElementById("response").innerText = "Please choose an image first.";
+                return;
+            }
+
+            const file = fileInput.files[0];
+
+            // Show loading state
+            document.getElementById("response").innerText = "🔍 Analyzing image with AI Vision... please wait.";
+            document.getElementById("uploadStatus").innerText = "Uploading & analyzing...";
+
+            const formData = new FormData();
+            formData.append("file", file);
+
+            const res = await fetch("http://127.0.0.1:8000/upload-image", {
+                method: "POST",
+                body: formData
+            });
+
+            const data = await res.json();
+            uploadedImage = data.filename;
+
+            // Show the AI Vision result to the user
+            const analysis = data.ai_analysis;
+            document.getElementById("uploadStatus").innerText = `✅ Uploaded: ${data.filename}`;
+            document.getElementById("response").innerText =
+                `🤖 AI Vision detected: ${analysis.description}\n` +
+                `Category: ${analysis.category} | Type: ${analysis.subcategory}\n\n` +
+                `Now click Send to see matching products!`;
+
+            const preview = document.getElementById("imagePreview");
+            preview.src = URL.createObjectURL(file);
+            preview.style.display = "block";
+        }
+    </script>
+
+</body>
+
+</html>

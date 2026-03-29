@@ -1,0 +1,167 @@
+[
+    {
+        "id": "d001",
+        "name": "Floral Summer Dress",
+        "description": "Lightweight floral dress perfect for summer outings and casual wear",
+        "category": "dress",
+        "brand": "StyleNest",
+        "price": 49.99,
+        "color": "blue",
+        "image_url": "http://127.0.0.1:8000/images/d001.jpg",
+        "tags": ["summer", "casual", "floral", "lightweight"]
+    },
+    {
+        "id": "d002",
+        "name": "Black Evening Dress",
+        "description": "Elegant black dress suitable for formal events and evening parties",
+        "category": "dress",
+        "brand": "EleganceWear",
+        "price": 89.99,
+        "color": "black",
+        "image_url": "http://127.0.0.1:8000/images/d002.jpg",
+        "tags": ["formal", "party", "elegant"]
+    },
+    {
+        "id": "d003",
+        "name": "Casual Cotton Midi Dress",
+        "description": "Comfortable cotton dress ideal for daily wear and relaxed outings",
+        "category": "dress",
+        "brand": "ComfyStyle",
+        "price": 39.99,
+        "color": "white",
+        "image_url": "http://127.0.0.1:8000/images/d003.jpg",
+        "tags": ["casual", "comfortable", "daily"]
+    },
+    {
+        "id": "d004",
+        "name": "Red Party Dress",
+        "description": "Stylish red dress designed for parties and special occasions",
+        "category": "dress",
+        "brand": "GlamFit",
+        "price": 69.99,
+        "color": "red",
+        "image_url": "http://127.0.0.1:8000/images/d004.jpg",
+        "tags": ["party", "stylish", "evening"]
+    },
+    {
+        "id": "d005",
+        "name": "Boho Maxi Dress",
+        "description": "Flowy bohemian maxi dress perfect for vacations and beach outings",
+        "category": "dress",
+        "brand": "BohoVibe",
+        "price": 59.99,
+        "color": "multicolor",
+        "image_url": "http://127.0.0.1:8000/images/d005.jpg",
+        "tags": ["boho", "vacation", "beach"]
+    },
+    {
+        "id": "a001",
+        "name": "Leather Handbag",
+        "description": "Premium leather handbag with spacious compartments for everyday use",
+        "category": "accessory",
+        "brand": "UrbanCarry",
+        "price": 79.99,
+        "color": "brown",
+        "image_url": "http://127.0.0.1:8000/images/a001.jpg",
+        "tags": ["bag", "daily", "fashion"]
+    },
+    {
+        "id": "a002",
+        "name": "Stylish Sunglasses",
+        "description": "UV-protected sunglasses with a trendy design for outdoor use",
+        "category": "accessory",
+        "brand": "SunShade",
+        "price": 29.99,
+        "color": "black",
+        "image_url": "http://127.0.0.1:8000/images/a002.jpg",
+        "tags": ["summer", "outdoor", "fashion"]
+    },
+    {
+        "id": "a003",
+        "name": "Classic Wrist Watch",
+        "description": "Elegant wrist watch with a minimalist design and durable build",
+        "category": "accessory",
+        "brand": "TimeLux",
+        "price": 99.99,
+        "color": "silver",
+        "image_url": "http://127.0.0.1:8000/images/a003.jpg",
+        "tags": ["formal", "luxury", "minimal"]
+    },
+    {
+        "id": "a004",
+        "name": "Fashion Backpack",
+        "description": "Modern backpack with stylish design and multiple storage compartments",
+        "category": "accessory",
+        "brand": "CarryTrend",
+        "price": 49.99,
+        "color": "black",
+        "image_url": "http://127.0.0.1:8000/images/a004.jpg",
+        "tags": ["travel", "daily", "casual"]
+    },
+    {
+        "id": "a005",
+        "name": "Gold Chain Necklace",
+        "description": "Elegant gold chain necklace suitable for both casual and formal wear",
+        "category": "accessory",
+        "brand": "ShineJewels",
+        "price": 59.99,
+        "color": "gold",
+        "image_url": "http://127.0.0.1:8000/images/a005.jpg",
+        "tags": ["jewelry", "fashion", "premium"]
+    },
+    {
+        "id": "g001",
+        "name": "Wireless Earbuds",
+        "description": "Compact wireless earbuds with high-quality sound and noise isolation",
+        "category": "gadget",
+        "brand": "SoundBeat",
+        "price": 59.99,
+        "color": "white",
+        "image_url": "http://127.0.0.1:8000/images/g001.jpg",
+        "tags": ["music", "wireless", "portable"]
+    },
+    {
+        "id": "g002",
+        "name": "Bluetooth Speaker",
+        "description": "Portable speaker with deep bass and long battery life",
+        "category": "gadget",
+        "brand": "BassBoom",
+        "price": 79.99,
+        "color": "black",
+        "image_url": "http://127.0.0.1:8000/images/g002.jpg",
+        "tags": ["music", "portable", "loud"]
+    },
+    {
+        "id": "g003",
+        "name": "Smart Watch",
+        "description": "Fitness tracking smartwatch with heart rate monitoring and notifications",
+        "category": "gadget",
+        "brand": "FitPulse",
+        "price": 129.99,
+        "color": "black",
+        "image_url": "http://127.0.0.1:8000/images/g003.jpg",
+        "tags": ["fitness", "tracking", "smart"]
+    },
+    {
+        "id": "g004",
+        "name": "Noise Cancelling Headphones",
+        "description": "Over-ear headphones with active noise cancellation for immersive sound",
+        "category": "gadget",
+        "brand": "QuietSound",
+        "price": 149.99,
+        "color": "black",
+        "image_url": "http://127.0.0.1:8000/images/g004.jpg",
+        "tags": ["music", "noise-cancelling", "premium"]
+    },
+    {
+        "id": "g005",
+        "name": "Portable Charger",
+        "description": "High-capacity power bank for charging devices on the go",
+        "category": "gadget",
+        "brand": "PowerMax",
+        "price": 39.99,
+        "color": "white",
+        "image_url": "http://127.0.0.1:8000/images/g005.jpg",
+        "tags": ["battery", "portable", "travel"]
+    }
+]
